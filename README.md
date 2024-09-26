@@ -14,6 +14,7 @@ Supported versions are as follows:
 2.4.10
 2.5.9
 2.6.10
+3.0.7
 ```
 
 Ruby 2.7+ is already supported by the official Ruby build.

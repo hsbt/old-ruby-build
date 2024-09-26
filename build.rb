@@ -19,6 +19,14 @@ class Builder
   ]
 
   PACKAGES = {
+    "3.0" => {
+      before: %w[
+        https://github.com/ruby/ruby/commit/1dfe75b0beb7171b8154ff0856d5149be0207724.patch
+      ],
+      after: %w[
+      ],
+      full_version: "3.0.7"
+    },
     "2.6" => {
       before: %w[
         https://cache.ruby-lang.org/pub/ruby/2.6/ruby-2.6.10.tar.xz
