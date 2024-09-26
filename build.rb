@@ -25,7 +25,7 @@ class Builder
         https://raw.githubusercontent.com/macports/macports-ports/refs/heads/master/lang/ruby30/files/patch-sources.diff
       ],
       after: %w[
-        https://raw.githubusercontent.com/macports/macports-ports/refs/heads/master/lang/ruby27/files/patch-generated.diff
+        https://raw.githubusercontent.com/macports/macports-ports/refs/heads/master/lang/ruby30/files/patch-generated.diff
       ],
       full_version: "3.0.7"
     },
@@ -35,7 +35,7 @@ class Builder
         https://raw.githubusercontent.com/macports/macports-ports/refs/heads/master/lang/ruby27/files/patch-sources.diff
       ],
       after: %w[
-        https://raw.githubusercontent.com/macports/macports-ports/blob/master/lang/ruby27/files/patch-generated.diff
+        https://raw.githubusercontent.com/macports/macports-ports/refs/heads/master/lang/ruby27/files/patch-generated.diff
       ],
       full_version: "2.7.8"
     },
