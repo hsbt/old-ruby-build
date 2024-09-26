@@ -21,11 +21,23 @@ class Builder
   PACKAGES = {
     "3.0" => {
       before: %w[
-        https://github.com/ruby/ruby/commit/1dfe75b0beb7171b8154ff0856d5149be0207724.patch
+        https://cache.ruby-lang.org/pub/ruby/3.0/ruby-3.0.7.tar.xz
+        https://raw.githubusercontent.com/macports/macports-ports/refs/heads/master/lang/ruby30/files/patch-sources.diff
       ],
       after: %w[
+        https://raw.githubusercontent.com/macports/macports-ports/refs/heads/master/lang/ruby27/files/patch-generated.diff
       ],
       full_version: "3.0.7"
+    },
+    "2.7" => {
+      before: %w[
+        https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.8.tar.xz
+        https://raw.githubusercontent.com/macports/macports-ports/refs/heads/master/lang/ruby27/files/patch-sources.diff
+      ],
+      after: %w[
+        https://raw.githubusercontent.com/macports/macports-ports/blob/master/lang/ruby27/files/patch-generated.diff
+      ],
+      full_version: "2.7.8"
     },
     "2.6" => {
       before: %w[
