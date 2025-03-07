@@ -21,7 +21,7 @@ Ruby 2.7+ is already supported by the official Ruby build.
 
 ## Usage
 
-You can use the script to pass `X.Y` version and intallation path as arguments like this:
+You can use the script to pass `X.Y` version and installation path as arguments like this:
 
 ```sh
 $ ruby ./build.rb 2.6 ~/.rbenv/versions
