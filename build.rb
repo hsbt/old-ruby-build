@@ -160,7 +160,7 @@ class Builder
     }
   }
 
-  def self.build(version, prefix)
+  def self.build(version, prefix, requested_version=nil)
     system("brew install rbenv/tap/openssl@1.0 openssl@1.1")
     system("brew uninstall bison")
     system("brew unlink openssl@3")
@@ -171,6 +171,11 @@ class Builder
     Downloader.download(CONFIG_FILES)
     [:before, :after].each do |key|
       Downloader.download(PACKAGES[version][key])
+    end
+
+    # Display warning if a different version than requested will be installed
+    if requested_version && requested_version != PACKAGES[version][:full_version]
+      puts "WARNING: You requested Ruby #{requested_version}, but installing #{PACKAGES[version][:full_version]} instead."
     end
 
     Dir.chdir("build") do
@@ -201,13 +206,28 @@ class Builder
 end
 
 abort if (ARGV[0].nil? && ARGV[1].nil?)
+requested_version = ARGV[0]
+prefix = ARGV[1]
 
-version, prefix = ARGV[0], ARGV[1]
-
-if version == "all"
+if requested_version == "all"
   Builder::PACKAGES.keys.each do |version|
     Builder.build(version, prefix)
   end
 else
-  Builder.build(version, prefix)
+  # Extract major.minor version from the requested version
+  version_match = requested_version.match(/^(\d+\.\d+)/)
+  if version_match
+    version_key = version_match[1]
+    if Builder::PACKAGES.key?(version_key)
+      Builder.build(version_key, prefix, requested_version)
+    else
+      puts "Unsupported Ruby version: #{requested_version}"
+      puts "Supported major.minor versions: #{Builder::PACKAGES.keys.join(', ')}"
+      abort
+    end
+  else
+    puts "Invalid Ruby version format: #{requested_version}"
+    puts "Please specify a version in the format X.Y or X.Y.Z"
+    abort
+  end
 end

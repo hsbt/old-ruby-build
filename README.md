@@ -27,6 +27,13 @@ You can use the script to pass `X.Y` version and installation path as arguments 
 $ ruby ./build.rb 2.6 ~/.rbenv/versions
 ```
 
+You can also specify a specific patch version like `X.Y.Z` (e.g., `2.6.9`). 
+In this case, the script will extract the major and minor version numbers and install the latest patch version available:
+```sh
+$ ruby ./build.rb 2.6.9 ~/.rbenv/versions
+# This will install Ruby 2.6.10 with a warning that 2.6.9 was requested
+```
+
 `all` instead of `X.Y` will build all supported versions.
 
 ```sh
