@@ -1,4 +1,5 @@
 #/usr/bin/env ruby
+require 'json'
 
 class Downloader
   require "open-uri"
@@ -18,147 +19,24 @@ class Builder
     https://raw.githubusercontent.com/gcc-mirror/gcc/master/config.sub
   ]
 
-  PACKAGES = {
-    "3.0" => {
-      before: %w[
-        https://cache.ruby-lang.org/pub/ruby/3.0/ruby-3.0.7.tar.xz
-        https://raw.githubusercontent.com/macports/macports-ports/refs/heads/master/lang/ruby30/files/patch-sources.diff
-      ],
-      after: %w[
-        https://raw.githubusercontent.com/macports/macports-ports/refs/heads/master/lang/ruby30/files/patch-generated.diff
-      ],
-      full_version: "3.0.7"
-    },
-    "2.7" => {
-      before: %w[
-        https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.8.tar.xz
-        https://raw.githubusercontent.com/macports/macports-ports/refs/heads/master/lang/ruby27/files/patch-sources.diff
-      ],
-      after: %w[
-        https://raw.githubusercontent.com/macports/macports-ports/refs/heads/master/lang/ruby27/files/patch-generated.diff
-      ],
-      full_version: "2.7.8"
-    },
-    "2.6" => {
-      before: %w[
-        https://cache.ruby-lang.org/pub/ruby/2.6/ruby-2.6.10.tar.xz
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby26/files/patch-sources.diff
-      ],
-      after: %w[
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby26/files/patch-generated.diff
-      ],
-      full_version: "2.6.10"
-    },
-    "2.5" => {
-      before: %w[
-        https://cache.ruby-lang.org/pub/ruby/2.5/ruby-2.5.9.tar.xz
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby25/files/patch-tiger.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby25/files/patch-osversions.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby25/files/patch-configure_cxx11.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby25/files/patch-test-fiddle-helper.rb.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby25/files/patch-ext-openssl-extconf.rb.diff
-      ],
-      after: %w[
-      ],
-      full_version: "2.5.9"
-    },
-    "2.4" => {
-      before: %w[
-        https://cache.ruby-lang.org/pub/ruby/2.4/ruby-2.4.10.tar.xz
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby24/files/patch-configure.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby24/files/patch-tiger.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby24/files/patch-osversions.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby24/files/patch-configure_cxx11.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby24/files/patch-ext-openssl-extconf.rb.diff
-      ],
-      after: %w[
-      ],
-      full_version: "2.4.10"
-    },
-    "2.3" => {
-      before: %w[
-        https://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.8.tar.xz
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby23/files/patch-ext_openssl_ossl.h.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby23/files/patch-tiger.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby23/files/patch-configure_cxx11.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby23/files/patch-openssl_pkgconfig.diff
-      ],
-      after: %w[
-      ],
-      full_version: "2.3.8"
-    },
-    "2.2" => {
-      before: %w[
-        https://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.10.tar.xz
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby22/files/patch-ext_openssl_ossl.h.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby22/files/patch-internal.h.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby22/files/patch-configure_cxx11.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby22/files/patch-openssl_pkgconfig.diff
-      ],
-      after: %w[
-      ],
-      full_version: "2.2.10"
-    },
-    "2.1" => {
-      before: %w[
-        https://cache.ruby-lang.org/pub/ruby/2.1/ruby-2.1.10.tar.xz
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby21/files/patch-ext_openssl_ossl.h.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby21/files/patch-configure_cxx11.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby21/files/patch-openssl_pkgconfig.diff
-      ],
-      after: %w[
-      ],
-      full_version: "2.1.10"
-    },
-    "2.0" => {
-      before: %w[
-        https://cache.ruby-lang.org/pub/ruby/2.0/ruby-2.0.0-p648.tar.xz
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby20/files/patch-ext-tk-extconf.rb.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby20/files/patch-configure_cxx11.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby20/files/implicit.patch
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby20/files/patch-openssl_pkgconfig.diff
-      ],
-      after: %w[
-      ],
-      full_version: "2.0.0-p648"
-    },
-    "1.9" => {
-      before: %w[
-        https://cache.ruby-lang.org/pub/ruby/1.9/ruby-1.9.3-p551.tar.xz
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby19/files/patch-lib-rubygems-specification.rb.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby19/files/patch-configure_cxx11.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby19/files/patch-ext-openssl-openssl_missing.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby19/files/patch-ext_openssl_ossl_x509ext.c.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby19/files/implicit.patch
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby19/files/patch-openssl_pkgconfig.diff
-      ],
-      after: %w[
-      ],
-      full_version: "1.9.3-p551"
-    },
-    "1.8" => {
-      before: %w[
-        https://cache.ruby-lang.org/pub/ruby/1.8/ruby-1.8.7-p374.tar.gz
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby/files/patch-vendordir.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby/files/patch-bug3604.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby/files/patch-bug19050.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby/files/patch-bug15528.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby/files/patch-c99.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby/files/patch-lib-drb-ssl.rb.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby/files/patch-Makefile.in
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby/files/patch-numeric.c.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby/files/patch-configure.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby/files/patch-ext-tk-extconf.rb.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby/files/patch-ext_openssl_extconf_rb.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby/files/patch-ext_openssl_ossl_ssl_c.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby/files/patch-ext_openssl_ossl.h.diff
-        https://raw.githubusercontent.com/macports/macports-ports/master/lang/ruby/files/implicit.patch
-      ],
-      after: %w[
-      ],
-      full_version: "1.8.7-p374"
-    }
-  }
+  def self.load_package_info
+    package_file = File.join(File.dirname(__FILE__), 'package.json')
+    package_data = JSON.parse(File.read(package_file))
+    
+    # Convert string keys to symbols for before/after keys
+    packages = {}
+    package_data['packages'].each do |version, info|
+      packages[version] = {
+        before: info['before'],
+        after: info['after'],
+        full_version: info['full_version']
+      }
+    end
+    
+    packages
+  end
+  
+  PACKAGES = load_package_info
 
   def self.build(version, prefix, requested_version=nil)
     system("brew install rbenv/tap/openssl@1.0 openssl@1.1")
