@@ -1,0 +1,14 @@
+diff --git configure.in configure.in
+index 3c6ce92f81..7ce7145cbb 100644
+--- configure.in
++++ configure.in
+@@ -2543,9 +2543,6 @@ else
+   AS_CASE(["$target_os"],
+     [hpux*], [
+ 	DLEXT=sl],
+-    [darwin*], [
+-	RUBY_APPEND_OPTION(XLDFLAGS, [-Wl,-u,_objc_msgSend])
+-	DLEXT=bundle],
+     [os2-emx*], [
+ 	LOAD_RELATIVE=1
+ 	DLEXT=dll],

@@ -67,6 +67,10 @@ class Builder
           system("patch -p0 < ../#{File.basename(patch)}")
         end
         openssl_version = version <= "2.3" ? "1.0" : "1.1"
+
+        system("patch -p0 < ../../patches/1.9/objc_msg_send.patch") if version == "1.9"
+        system("patch -p0 < ../../patches/2.0/objc_msg_send.patch") if version == "2.0"
+
         system("./configure CFLAGS='-Wno-error=implicit-int -Wno-error=incompatible-function-pointer-types -Wno-error=int-conversion -Wno-error=implicit-function-declaration' --with-openssl-dir=$(brew --prefix openssl@#{openssl_version}) --with-gdbm-dir=$(brew --prefix gdbm) --with-readline-dir=$(brew --prefix readline) --with-gmp-dir=$(brew --prefix gmp) --with-yaml-dir=$(brew --prefix libyaml) --disable-install-doc --without-tk --with-arch=arm64 --enable-shared --prefix=#{prefix}/#{PACKAGES[version][:full_version]}")
         PACKAGES[version][:after].each do |patch|
           system("patch -p0 < ../#{File.basename(patch)}")
