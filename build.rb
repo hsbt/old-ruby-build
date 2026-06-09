@@ -48,7 +48,6 @@ class Builder
     puts "Logging build output to #{@log_file}"
 
     run("brew install rbenv/tap/openssl@1.0 openssl@1.1")
-    run("brew uninstall bison")
     run("brew unlink openssl@3")
 
     require "fileutils"
@@ -91,7 +90,6 @@ class Builder
     FileUtils.rm_rf("build")
 
     run("brew link openssl@3")
-    run("brew install bison")
   end
 end
 
