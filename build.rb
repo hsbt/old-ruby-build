@@ -38,10 +38,18 @@ class Builder
   
   PACKAGES = load_package_info
 
+  def self.run(command)
+    system("#{command} >> #{@log_file} 2>&1")
+  end
+
   def self.build(version, prefix, requested_version=nil)
-    system("brew install rbenv/tap/openssl@1.0 openssl@1.1")
-    system("brew uninstall bison")
-    system("brew unlink openssl@3")
+    @log_file = File.expand_path("#{PACKAGES[version][:full_version]}.log")
+    File.write(@log_file, "")
+    puts "Logging build output to #{@log_file}"
+
+    run("brew install rbenv/tap/openssl@1.0 openssl@1.1")
+    run("brew uninstall bison")
+    run("brew unlink openssl@3")
 
     require "fileutils"
     FileUtils.mkdir_p("build")
@@ -57,33 +65,33 @@ class Builder
     end
 
     Dir.chdir("build") do
-      system("tar -xf ruby-#{PACKAGES[version][:full_version]}.tar.*")
+      run("tar -xf ruby-#{PACKAGES[version][:full_version]}.tar.*")
       Dir.chdir("ruby-#{PACKAGES[version][:full_version]}") do
         config_target = version < "1.9" ? "." : "tool/"
         CONFIG_FILES.each do |file|
           FileUtils.cp("../#{File.basename(file)}", config_target)
         end
         PACKAGES[version][:before][1..-1].each do |patch|
-          system("patch -p0 < ../#{File.basename(patch)}")
+          run("patch -p0 < ../#{File.basename(patch)}")
         end
         openssl_version = version <= "2.3" ? "1.0" : "1.1"
 
-        system("patch -p0 < ../../patches/1.9/objc_msg_send.patch") if version == "1.9"
-        system("patch -p0 < ../../patches/2.0/objc_msg_send.patch") if version == "2.0"
+        run("patch -p0 < ../../patches/1.9/objc_msg_send.patch") if version == "1.9"
+        run("patch -p0 < ../../patches/2.0/objc_msg_send.patch") if version == "2.0"
 
-        system("./configure CFLAGS='-Wno-error=implicit-int -Wno-error=incompatible-function-pointer-types -Wno-error=int-conversion -Wno-error=implicit-function-declaration' --with-openssl-dir=$(brew --prefix openssl@#{openssl_version}) --with-gdbm-dir=$(brew --prefix gdbm) --with-readline-dir=$(brew --prefix readline) --with-gmp-dir=$(brew --prefix gmp) --with-yaml-dir=$(brew --prefix libyaml) --disable-install-doc --without-tk --with-arch=arm64 --enable-shared --prefix=#{prefix}/#{PACKAGES[version][:full_version]}")
+        run("./configure CFLAGS='-Wno-error=implicit-int -Wno-error=incompatible-function-pointer-types -Wno-error=int-conversion -Wno-error=implicit-function-declaration' --with-openssl-dir=$(brew --prefix openssl@#{openssl_version}) --with-gdbm-dir=$(brew --prefix gdbm) --with-readline-dir=$(brew --prefix readline) --with-gmp-dir=$(brew --prefix gmp) --with-yaml-dir=$(brew --prefix libyaml) --disable-install-doc --without-tk --with-arch=arm64 --enable-shared --prefix=#{prefix}/#{PACKAGES[version][:full_version]}")
         PACKAGES[version][:after].each do |patch|
-          system("patch -p0 < ../#{File.basename(patch)}")
+          run("patch -p0 < ../#{File.basename(patch)}")
         end
-        system("make -j$(sysctl -n hw.logicalcpu)")
-        system("make install")
+        run("make -j$(sysctl -n hw.logicalcpu)")
+        run("make install")
       end
     end
 
     FileUtils.rm_rf("build")
 
-    system("brew link openssl@3")
-    system("brew install bison")
+    run("brew link openssl@3")
+    run("brew install bison")
   end
 end
 
