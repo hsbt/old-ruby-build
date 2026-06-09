@@ -49,6 +49,7 @@ The following Ruby versions are available for installation:
 
 | Major Version | Full Version |
 |--------------|--------------|
+| 3.1 | 3.1.7 |
 | 3.0 | 3.0.7 |
 | 2.7 | 2.7.8 |
 | 2.6 | 2.6.10 |

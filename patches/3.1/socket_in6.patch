@@ -1,0 +1,11 @@
+--- ext/socket/extconf.rb	2026-06-09 14:01:07
++++ ext/socket/extconf.rb	2026-06-09 14:01:07
+@@ -655,7 +655,7 @@
+   end
+ 
+   hdr = "netinet6/in6.h"
+-  if /darwin/ =~ RUBY_PLATFORM and !try_compile(<<"SRC", nil, :werror=>true)
++  if false and !try_compile(<<"SRC", nil, :werror=>true) # disabled: modern macOS has no /usr/include/netinet6/in6.h
+ #include <netinet/in.h>
+ int t(struct in6_addr *addr) {return IN6_IS_ADDR_UNSPECIFIED(addr);}
+ SRC

@@ -1,5 +1,12 @@
 {
   "packages": {
+    "3.1": {
+      "before": [
+        "https://cache.ruby-lang.org/pub/ruby/3.1/ruby-3.1.7.tar.xz"
+      ],
+      "after": [],
+      "full_version": "3.1.7"
+    },
     "3.0": {
       "before": [
         "https://cache.ruby-lang.org/pub/ruby/3.0/ruby-3.0.7.tar.xz",
